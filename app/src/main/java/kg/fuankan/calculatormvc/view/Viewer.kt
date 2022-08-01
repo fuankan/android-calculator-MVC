@@ -3,38 +3,57 @@ package kg.fuankan.calculatormvc.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
-import kg.fuankan.calculatormvc.R
 import kg.fuankan.calculatormvc.controller.Controller
+import kg.fuankan.calculatormvc.databinding.ActivityMainBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Viewer : AppCompatActivity() {
 
-    private val controller: Controller
+    private var controller: Controller
+    private lateinit var binding: ActivityMainBinding
 
-    private lateinit var textView: TextView
-    private lateinit var button: Button
+    private var viewArray: ArrayList<Button>
 
     init {
         controller = Controller(this)
+        viewArray = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        textView = findViewById(R.id.textView)
-        button = findViewById(R.id.button)
-
-        button.setOnClickListener(controller)
+        with(binding) {
+            btnClear.setOnClickListener { clear() }
+            btnEqual.setOnClickListener(controller)
+            Collections.addAll(
+                viewArray, btnOpenBrace, btnCloseBrace, btnDivide, btnSeven, btnEight, btnNine,
+                btnMultiply, btnFour, btnFive, btnSix, btnMinus, btnOne, btnTwo, btnThree, btnPlus,
+                btnDot, btnZero,
+            )
+        }
+        for (element in viewArray) {
+            element.setOnClickListener { addToCurrent(element.tag.toString()) }
+        }
     }
 
-    fun getTV(): String {
-        return textView.text.toString()
-    }
-
-    fun upload(command: String) {
-        textView.text = command
+    fun getCurrent(): String {
+        return binding.tvCurrent.text.toString()
     }
 
 
+    private fun clear() {
+        binding.tvCurrent.text = ""
+    }
+
+    private fun addToCurrent(command: String) {
+        binding.tvCurrent.append(command)
+    }
+
+    fun updateCurrent(command: String) {
+        binding.tvCurrent.text = ""
+        binding.tvCurrent.text = command
+    }
 }

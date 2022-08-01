@@ -4,18 +4,17 @@ import kg.fuankan.calculatormvc.view.Viewer
 
 class Model {
 
-    val viewer: Viewer
+    private var viewer: Viewer
+    private var rpn: RPN
 
     constructor(viewer: Viewer) {
         this.viewer = viewer
+        rpn = RPN()
     }
 
-    fun plus() {
-        val tv = viewer.getTV()
+    fun calculate() {
+        val expression = viewer.getCurrent()
+        viewer.updateCurrent(rpn.calculate(expression))
 
-        var tvInt = tv.toInt()
-        tvInt += 1
-
-        viewer.upload(tvInt.toString())
     }
 }
